@@ -2,7 +2,6 @@ import gsap from 'gsap';
 import { ArrowDownRight, ArrowUpRight, Palette, Sparkles } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { KEY_METRICS, PROFILE, PROJECTS, ProjectItem, ThemeMode } from '../data/portfolio';
-import { HeroNeuralBackdrop } from './HeroNeuralBackdrop';
 import { SplitHeading } from './SplitHeading';
 
 interface HeroProps {
@@ -102,9 +101,6 @@ export function Hero({
         isPaper ? 'bg-[#F7F4EE] text-[#0E0F11]' : 'bg-[#0E0F11] text-[#F7F4EE]'
       }`}
     >
-      {/* Live AI Neural Network + Ambient AI Graphics Background */}
-      <HeroNeuralBackdrop themeMode={themeMode} />
-
       <div className="relative z-20 max-w-7xl w-full mx-auto px-6 sm:px-10 pt-4 pb-12 lg:pt-8">
         {/* Top Utility Strip: Location + Cursor Flair + Theme Switcher */}
         <div className="hero-rv flex flex-wrap items-center justify-between gap-4 pb-8 border-b border-current/15">
@@ -117,7 +113,7 @@ export function Hero({
               type="button"
               onClick={onToggleTrail}
               aria-pressed={trailEnabled}
-              className={`hidden md:inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-mono rounded-[50px] border transition-colors duration-300 cursor-pointer focus-visible:outline-2 focus-visible:outline-[#C82333] ${
+              className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-mono rounded-[50px] border transition-colors duration-300 cursor-pointer focus-visible:outline-2 focus-visible:outline-[#C82333] ${
                 trailEnabled
                   ? 'border-[#C82333] text-[#C82333]'
                   : 'border-current/20 opacity-65 hover:opacity-100'

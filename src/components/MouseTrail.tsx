@@ -12,10 +12,10 @@ export function MouseTrail({ enabled = true }: MouseTrailProps) {
 
   useEffect(() => {
     if (!enabled) return;
-    const canHover = window.matchMedia('(hover: hover)').matches;
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (!canHover || reduced) return;
+    if (reduced) return;
 
+    const isCoarsePointer = window.matchMedia('(pointer: coarse)').matches;
     const container = containerRef.current;
     if (!container) return;
 
@@ -23,7 +23,7 @@ export function MouseTrail({ enabled = true }: MouseTrailProps) {
     if (items.length === 0) return;
 
     const wrap = gsap.utils.wrap(0, items.length);
-    const gap = 74;
+    const gap = isCoarsePointer ? 46 : 74;
     let index = 0;
     const mousePos = { x: -200, y: -200 };
     const lastMousePos = { x: -200, y: -200 };
@@ -75,7 +75,18 @@ export function MouseTrail({ enabled = true }: MouseTrailProps) {
       }
     };
 
-    const onMouseMove = (e: MouseEvent) => {
+    const onPointerDown = (e: PointerEvent) => {
+      mousePos.x = e.clientX;
+      mousePos.y = e.clientY;
+      lastMousePos.x = e.clientX;
+      lastMousePos.y = e.clientY;
+      hasMoved = true;
+      if (e.pointerType !== 'mouse') {
+        spawnShape();
+      }
+    };
+
+    const onPointerMove = (e: PointerEvent) => {
       if (!hasMoved) {
         hasMoved = true;
         lastMousePos.x = e.clientX;
@@ -85,11 +96,27 @@ export function MouseTrail({ enabled = true }: MouseTrailProps) {
       mousePos.y = e.clientY;
     };
 
-    window.addEventListener('mousemove', onMouseMove, { passive: true });
+    const onTouchMove = (e: TouchEvent) => {
+      const touch = e.touches[0];
+      if (!touch) return;
+      if (!hasMoved) {
+        hasMoved = true;
+        lastMousePos.x = touch.clientX;
+        lastMousePos.y = touch.clientY;
+      }
+      mousePos.x = touch.clientX;
+      mousePos.y = touch.clientY;
+    };
+
+    window.addEventListener('pointerdown', onPointerDown, { passive: true });
+    window.addEventListener('pointermove', onPointerMove, { passive: true });
+    window.addEventListener('touchmove', onTouchMove, { passive: true });
     gsap.ticker.add(tick);
 
     return () => {
-      window.removeEventListener('mousemove', onMouseMove);
+      window.removeEventListener('pointerdown', onPointerDown);
+      window.removeEventListener('pointermove', onPointerMove);
+      window.removeEventListener('touchmove', onTouchMove);
       gsap.ticker.remove(tick);
       items.forEach((n) => gsap.killTweensOf(n));
     };
