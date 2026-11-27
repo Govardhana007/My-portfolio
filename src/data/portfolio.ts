@@ -107,7 +107,7 @@ export const AI_WORK_SHOWCASE: AiWorkShowcaseItem[] = [
       'Object-oriented Python inference services & unit testing',
       'Public model deployment on Render & Hugging Face Spaces',
     ],
-    image: '/assets/aistudio/images_002_73ae02ca.jpg',
+    image: '/assets/aistudio/images_002_73ae02ca.jpeg',
     imageAlt: 'AI neural processing chip connected to computer vision, analytics, dialogue, and code interfaces',
     lightSurface: true,
     relatedProjectId: 'skinshield-ai',
